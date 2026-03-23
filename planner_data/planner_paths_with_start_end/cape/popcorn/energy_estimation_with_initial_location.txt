@@ -1,0 +1,12 @@
+ENERGY CALCULATOR: Optimal speed: 8.391240Time of flight: 529.888692 Hover power consumption: 426.035460 Optimal speed power consumption: 465.230723
+
+File                         Len[m]     Energy[J]   Energy[Wh]   kJ/km
+---------------------------------------------------------------
+combined_route_1.csv          13029.39    992060.52       275.57   76.14
+combined_route_2.csv          14554.15   1086927.09       301.92   74.68
+combined_route_3.csv          11576.53    869370.70       241.49   75.10
+---------------------------------------------------------------
+path_cost_sum (fleet energy): 2948358.31 J  (818.99 Wh)
+max_path_cost  (worst UAV):   1086927.09 J  (301.92 Wh)  in combined_route_2.csv
+TOTAL length: 39160.07 m
+

@@ -1,0 +1,34 @@
+battery_model:
+  cell_capacity: 5
+  number_of_cells: 4
+  d0: 0.99876
+  d1: -0.002
+  d2: -5.2484e-05
+  d3: 1.223e-07
+best_speed_model:
+  c0: 0.041546
+  c1: 0.041122
+  c2: 0.00053292
+drone_mass: 3.2
+drone_area: 0.07
+average_acceleration: 2.0
+propeller_radius: 0.19
+number_of_propellers: 4
+allowed_path_deviation: 2
+number_of_rotations: 4
+points_in_lat_lon: true
+latitude_origin: 49.365642730404964
+longitude_origin: 14.2505300863795
+fly_zone_filename: fly_zone.csv
+no_fly_zones_filenames:
+  - "no_fly_zone_0.csv"
+output_paths_location: ./
+number_of_drones: 3
+sweeping_step: 22
+decomposition_method: 1
+min_sub_polygons_per_uav: 1
+start_x: 49.365642730404964
+start_y: 14.2505300863795
+rotations_per_cell: 4
+no_improvement_cycles_before_stop: 400
+max_single_path_energy: 1000000000

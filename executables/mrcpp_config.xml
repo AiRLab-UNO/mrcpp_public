@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root BTCPP_format="4"
+      main_tree_to_execute="mrcpp">
+  <BehaviorTree ID="RoutePlanner">
+    <Sequence>
+      <PathPlanner roi_poly="{roi_poly}"
+                   line_segments="{line_segments}"
+                   task="{task}"
+                   path="{path}"
+                   obstacle_list="{obstacle_list}"
+                   robot_radius="{robot_radius}"/>
+      <ConvertToGpsPath origin="{origin}"
+                        path="{path}"/>
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="SwathPlanner">
+    <Sequence>
+      <SwathGenerator roi_poly="{roi_poly}"
+                      line_segments="{line_segments}"
+                      robot_radius="1.5"/>
+      <ObstacleAvoidance json_str="{json_str}"
+                         line_segments="{line_segments}"
+                         obstacle_list="{obstacle_list}"
+                         robot_radius="{robot_radius}"
+                         interpolate_distance="{robot_radius}"/>
+      <SubTree ID="TaskAssignment"/>
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="TaskAssignment">
+    <Sequence>
+      <TaskPlanner line_segments="{line_segments}"
+                   task_map="{task_map}"
+                   num_robots="3"/>
+      <LoopAssignment queue="{task_map}"
+                      value="{task}">
+        <SubTree ID="RoutePlanner"/>
+      </LoopAssignment>
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="mrcpp">
+    <Sequence>
+      <ServerRequest json_str="{json_str}"
+                     num_robots="{num_robots}"
+                     robot_radius="{robot_radius}"/>
+      <DataLoader json_str="{json_str}"
+                  roi_poly="{roi_poly}"/>
+      <GpsDecoder origin="{origin}"
+                  roi_poly="{roi_poly}"/>
+      <Sequence>
+        <OffsetPolygon robot_radius="{robot_radius}"
+                       roi_poly="{roi_poly}"
+                       dilated_poly="{dilated_poly}"/>
+        <SwathGenerator roi_poly="{roi_poly}"
+                        line_segments="{line_segments}"
+                        robot_radius="{robot_radius}"/>
+        <ObstacleAvoidance json_str="{json_str}"
+                           line_segments="{line_segments}"
+                           obstacle_list="{obstacle_list}"
+                           robot_radius="{robot_radius}"
+                           interpolate_distance="{robot_radius}"/>
+        <Sequence>
+          <TaskPlanner line_segments="{line_segments}"
+                       task_map="{task_map}"
+                       num_robots="{num_robots}"/>
+          <LoopAssignment queue="{task_map}"
+                          value="{task}">
+            <Sequence>
+              <PathPlanner roi_poly="{roi_poly}"
+                           dilated_poly="{dilated_poly}"
+                           line_segments="{line_segments}"
+                           task="{task}"
+                           path="{path}"
+                           obstacle_list="{obstacle_list}"
+                           robot_radius="{robot_radius}"/>
+              <ConvertToGpsPath origin="{origin}"
+                                path="{path}"/>
+              <PathAccumulator path="{path}"/>
+            </Sequence>
+          </LoopAssignment>
+        </Sequence>
+      </Sequence>
+    </Sequence>
+  </BehaviorTree>
+
+  <!-- Description of Node Models (used by Groot) -->
+  <TreeNodesModel>
+    <Action ID="ConvertToGpsPath"
+            editable="true">
+      <input_port name="origin"
+                  default="{origin}"/>
+      <input_port name="path"
+                  default="{path}"/>
+    </Action>
+    <Action ID="DataLoader"
+            editable="true">
+      <input_port name="json_str"
+                  default="{json_str}"/>
+      <output_port name="roi_poly"
+                   default="{roi_poly}"/>
+    </Action>
+    <Action ID="GpsDecoder"
+            editable="true">
+      <output_port name="origin"
+                   default="{origin}"/>
+      <input_port name="roi_poly"
+                  default="{roi_poly}"/>
+    </Action>
+    <Decorator ID="LoopAssignment"
+               editable="true">
+      <input_port name="queue"/>
+      <output_port name="value"/>
+    </Decorator>
+    <Action ID="ObstacleAvoidance"
+            editable="true">
+      <input_port name="json_str"
+                  default="{json_str}">Obstacle locations</input_port>
+      <input_port name="line_segments"
+                  default="{line_segments}">Initial swath lines (shared variable)</input_port>
+      <output_port name="obstacle_list"
+                   default="{obstacle_list}"/>
+      <input_port name="robot_radius"
+                  default="{robot_radius}"/>
+      <input_port name="interpolate_distance"
+                  default="{robot_radius}"/>
+    </Action>
+    <Action ID="OffsetPolygon"
+            editable="true">
+      <input_port name="robot_radius"
+                  default="{robot_radius}"/>
+      <input_port name="roi_poly"
+                  default="{roi_poly}"/>
+      <output_port name="dilated_poly"
+                   default="{dilated_poly}"/>
+    </Action>
+    <Action ID="PathAccumulator"
+            editable="true">
+      <input_port name="path"
+                  default="{path}"/>
+    </Action>
+    <Action ID="PathPlanner"
+            editable="true">
+      <input_port name="roi_poly"
+                  default="{roi_poly}">lnput region of interest</input_port>
+      <input_port name="dilated_poly"
+                  default="{dilated_poly}">Original pre-offset ROI polygon for boundary checking</input_port>
+      <input_port name="line_segments"
+                  default="{line_segments}">Segmented swaths</input_port>
+      <input_port name="task"
+                  default="{task}">Task assignments </input_port>
+      <output_port name="path"
+                   default="{path}">Geometric path </output_port>
+      <input_port name="obstacle_list"
+                  default="{obstacle_list}">Set of polygonal obstacles</input_port>
+      <input_port name="robot_radius"
+                  default="{robot_radius}">Robot radius for obstacle clearance</input_port>
+    </Action>
+    <Action ID="ServerRequest"
+            editable="true">
+      <output_port name="json_str"
+                   default="{json_str}"/>
+      <output_port name="num_robots"
+                   default="{num_robots}"/>
+      <output_port name="robot_radius"
+                   default="{robot_radius}"/>
+    </Action>
+    <Action ID="SwathGenerator"
+            editable="true">
+      <input_port name="roi_poly"
+                  default="{roi_poly}">Region of interest polygon</input_port>
+      <output_port name="line_segments"
+                   default="{line_segments}">Swath lines over the entire roi</output_port>
+      <input_port name="robot_radius"
+                  default="1.5">Robot radius</input_port>
+    </Action>
+    <Action ID="TaskPlanner"
+            editable="true">
+      <input_port name="line_segments"
+                  default="{line_segments}">Swath  segments</input_port>
+      <output_port name="task_map"
+                   default="{task_map}">task assignments over swath</output_port>
+      <input_port name="num_robots"
+                  default="3">Number of robots</input_port>
+    </Action>
+  </TreeNodesModel>
+
+</root>

@@ -1,0 +1,43 @@
+# Build directories
+**/build/
+**/pybind/build/
+build
+cmake-debug-build
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.so
+results
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+.uv_lock
+.venv
+__py_cache__/
+.vscode
+.idea
+.claude
+.qtcreator
+.python-version
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+*.swp
+*~
+.vscode/
+eamcp/pybind/build
+eamcp/build
+mrcpp/build
+mrcpp/pybind/build
+**/amtsp*
+.claude
+.qtcreator
+.vscode
+.idea
+*.png

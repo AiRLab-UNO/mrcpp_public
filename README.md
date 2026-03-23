@@ -100,7 +100,7 @@ Runs three ablation studies over a single experiment:
 | Study | What varies | Fixed values |
 |---|---|---|
 | 1 — Orientation | `mar`, `angle_search`, `pca`, `min_width` | headland\_scale=1.0, transition=full |
-| 2 — Headland buffer | 0.0, 0.25, 0.5, 0.75, 1.0 | orientation=mar, transition=full |
+| 2 — Headland Safety buffer | 0.0, 0.25, 0.5, 0.75, 1.0 | orientation=mar, transition=full |
 | 3 — Transition strategy | `full`, `direct`, `dijkstra_only` | orientation=mar, headland\_scale=2.0 |
 
 ### Required files inside `<experiment_dir>`

@@ -67,7 +67,7 @@ Runs the coverage path planner on a single experiment and writes one CSV per rob
 ### Example
 
 ```bash
-./build/mrcpp_basic results/experiments/simple_6
+./build/mrcpp_basic results/experiments/simple
 ```
 
 ### Output
@@ -182,7 +182,7 @@ Computes energy consumption from a directory of path CSVs (e.g. the output of
 ### Example — use output from `mrcpp_basic`
 
 ```bash
-./build/energy_estimator results/experiments/simple_6/mrcpp_results --latlon
+./build/energy_estimator results/experiments/simple/mrcpp_results --latlon
 ```
 
 ### Example — Cartesian paths

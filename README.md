@@ -206,7 +206,61 @@ TOTAL length: 2596.10 m
 
 ---
 
-## 6. Setup & automation script
+## 6. `main.py` — Batch energy analysis tool
+
+Python script to analyze energy consumption for multiple experiments and planning methods stored in `planner_data/`.
+
+### Purpose
+
+Processes path data from various planning algorithms (EAMCMP, MRCPP, POPCORN, DARP) across different experimental scenarios and computes energy estimates using the `energy_estimator` binary.
+
+### Usage
+
+```bash
+python main.py
+```
+
+### Configuration
+
+Edit the `main()` function to select:
+
+- **Benchmarks**: List of environment names (e.g., `complex_4`, `complex_5`, `cape_4`, etc.)
+- **Methods**: Planning algorithms to analyze (e.g., `["eamcmp", "mrcpp", "popcorn", "darp"]`)
+- **Data directory**: Defaults to `planner_data/scale_result_with_start_end/`
+
+### What it does
+
+1. Iterates through each benchmark environment and method combination
+2. Locates CSV path files in `planner_data/scale_result_with_start_end/{env_name}/{method}/`
+3. Calls `energy_estimator` on each valid directory containing CSV files
+4. Saves energy estimation output to `energy_estimation_with_initial_location.txt` in each method directory
+
+### Optional: Add start/end depot
+
+The `estimate_energy()` method supports an `append_initial_location` flag that:
+- Reads the depot location from `start_point.csv`
+- Prepends and appends this location to each robot's path CSV
+- Ensures energy estimates include depot return trips
+
+### Example output
+
+```
+Processing complex_4/eamcmp...
+Processing complex_4/mrcpp...
+Processing complex_5/eamcmp...
+...
+```
+
+Energy results are saved to:
+```
+planner_data/scale_result_with_start_end/complex_4/eamcmp/energy_estimation_with_initial_location.txt
+planner_data/scale_result_with_start_end/complex_4/mrcpp/energy_estimation_with_initial_location.txt
+...
+```
+
+---
+
+## 7. Setup & automation script
 
 The script `analysis/setup_results.sh` bootstraps a clean `results/` workspace
 and can optionally run all three tools in sequence.
@@ -215,11 +269,11 @@ and can optionally run all three tools in sequence.
 bash analysis/setup_results.sh
 ```
 
-See §7 for options.
+See §8 for options.
 
 ---
 
-## 7. Full workflow (end-to-end)
+## 8. Full workflow (end-to-end)
 
 ```bash
 # 1. Build
